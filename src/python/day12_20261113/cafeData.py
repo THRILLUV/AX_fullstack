@@ -10,45 +10,77 @@ import streamlit as st
 # 기록된 매출과 반품은 얼마인가?
 
 
+# 실제 파일에서 확인한 내용
+# 날짜, 시간 - 2024-01-01
+# 거래 구분 - 매출 47행 / 반품 2행
+
+#  데이터 분석 6행
+# 목적 - 상품군별 금액을 확인하고 커피 수량, 금액, 관계 체험
+# 위험 - 반품을 더하거나 행 수를 주문 수로 오해할 수 있음
+# 출처 - 공공데이터 확인
+# 원인 - 예약일, 할인율의 빈 값, 중복 확인 필요
+# 방법 - 원본 유지, 매출 반품 분리, 예측에서는 커피 기록 선택
+# 기록 - 
+
+
 # 2. 파일 읽어오기
 try:
     원본데이터 = pd.read_csv("CAFE_DATA.csv")
 
 # 구조확인
-# 행과 열 수 확인
-# 위에서 3개만확인 하는거
-
-    print("전체 행과 열 : ", 원본데이터.shape)
-# print(원본데이터.info())
-    print(원본데이터.isna().sum())
-    print(원본데이터.head(3))
-
-
-# 구조확인
 
 # 전체 행과 열 :  (49, 20)
-# ADDR_DC            0
-# TRDAR_NM           0
-# RCIPT_NO           0
-# SALES_CD           0
-# ORDER_TY           0
-# ORDER_CN           0
-# SALES_DE           0
-# SALES_TIME         0
-# SALES_WKDAY_CD     0
-# RESVE_DT          29
-# LCLAS_CD           0
-# MLSFC_CD           0
-# SCLAS_CD           0
-# SLE_CO             0
-# SETLE_PRICE        0
-# DSCNT_PRICE        0
-# PAYMENT_PRICE      0
-# DSCNT_NM           0
-# DSCNT_RT          24
-# SETLE_MTH_CN       0
-# dtype: int64
+# 구조확인
+# SALES_CD - 매출/반품 구분
+# MLSFC_CD - 상품군: 커피,케이크 등
+# SLE_CO - 해당 행의 수량
+# PAYMENT_PRICE - 해당 행의 결제금액
+# PRIPT_NO - 영수증 번호
+# RESVE_DT - 예약 일시로 해석하는 열
+# DSECNT_RT - 할인율로 해석하는 열
 
+# 행과 열 수 확인
+    print("전체 행과 열 : ", 원본데이터.shape)
 
+# 위에서 3개만확인 하는거
+    print(원본데이터[["SALES_CD","MLSFC_CD","PAYMENT_PRICE"]].head(3))
+
+# 빈값 확인
+# print(원본데이터.info())
+    print(원본데이터.isna().sum())
+
+# 중복확인
+
+    print(원본데이터.duplicated().sum())
+
+# 매출만 선택하고 복사.
+# 1. 데이터 열 선택!
+# 2. 매출 비교
+# 3. 새로운 표를 만든다.
+    매출 = 원본데이터[원본데이터["SALES_CD"] == "매출"].copy()
+    print(매출.head(4))
+    반품 = 원본데이터[원본데이터["SALES_CD"] == "반품"].copy()
+
+# 무엇이 바뀌었고, 결과가 맞는가?
+    print("원본 행 수:", len(원본데이터))
+    print("매출행 수:", len(매출))
+    print("반품행 수:", len(반품))
+
+# 총매출
+    총매출 = 매출["PAYMENT_PRICE"].sum()
+
+# 반품액
+    반품액 = 반품["PAYMENT_PRICE"].sum()
+
+    # 순 매출
+    print("순 매출:", 총매출 - 반품액)
+    
 except FileNotFoundError:
     print("파일이 없으요")
+
+
+# 지울까? 남길까? 채울까?
+# 매출과 반품이 함께 있음 - 매출만 선택하고 반품은 따로 뺴서 순 매출을 계산
+
+# 중복처럼 보이는 행은 삭제하지 않고 직접확인.
+
