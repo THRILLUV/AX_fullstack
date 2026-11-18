@@ -6,7 +6,7 @@
       "type": "debugpy",
       "request": "launch",
       "program": "${file}",
-      "console": "externalTerminal",
+      "console": "integratedTerminal",
       "cwd": "${fileDirname}",
       "justMyCode": true,
       "purpose": ["debug-in-terminal"]
