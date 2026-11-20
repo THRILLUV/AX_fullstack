@@ -39,7 +39,10 @@ st.markdown(
     """
     <style>
     .stApp {background: #f3f4f6;}
-    .block-container {max-width: 860px; padding-top: 1.2rem;}
+    .block-container {max-width: 860px; padding-top: 5rem !important;}
+    [data-testid="stHeader"] {background: #f3f4f6;}
+    [data-testid="stHeading"], [data-testid="stHeadingWithActionElements"] {overflow: visible;}
+    h1, h2, h3 {line-height: 1.45; padding-top: 0.4rem;}
     div[data-testid="stHorizontalBlock"]:has(> div:nth-child(5)) [data-testid="stColumn"] {min-width: 150px;}
     h1, h2, h3, p, label, .under {color: #222 !important;}
     div[data-testid="stButton"] button {
@@ -101,6 +104,7 @@ st.markdown(
 )
 
 st.header("KANT 수료확률 계산기")
+st.caption("고용24 앱을 켜고, QR출결에 나온 출석·지각·조퇴·외출·결석을 그대로 넣어 보세요.")
 
 항목 = ["출석", "지각", "조퇴", "외출", "결석"]
 칸 = st.columns(5)
