@@ -23,26 +23,30 @@ db저장소 = db.connect("kakao.db")
 # 오픈채팅탭 개발자가 비어있는값을 확인하는 if문
 # 까먹음?
 
+# 제약 조건 종류
+# primary key (대표키)
+# not null
+#   - 이 칸은 비우면 안됨!
+# unique
+#  - 이 칸은 겹치면 안된다(중복데이터X)
+# 규칙은 칸마다 다르다
 
+# 대표키를 작성할 때는 대부분 숫자로 작성 (uuid)
+# 문자는 중복이 발생할 확률이 높음!
 
 마우스.execute("""
-    create table if not sxists members(
-        회원번호    integer  primary key  autoincrement,
-        아이디      text     not null   unique,
-        비밀번호    text     not null,
-        이름        text     not null,
-        전화번호    text     not null   unique 
-    )
-
-
-
+    create table if not exists members(
+        회원번호   integer  primary key  autoincrement,
+        아이디     text     not null  unique,
+        비밀번호    text    not null,
+        이름       text     not null,
+        전화번호    text    not null  unique
+        )
 """)
 
 # not null 만 컬럼에 지정하면 값을 필수!
-# 단 중복되는 값들이 들어올 수 있다.
-# 컬럼마다 어떤건 중복되도 되고 어떤건 안된다. 정해줘야함. (데이터 무결성)
-# 중복되면 안되는 곳에는 unique를 써서 추가 설정한다.
-
+#  중복되는 값들이 들어올 수있다.
+# unique 로 중복되면 안 되는 칸들에 추가 설정한다!
 # 모든 데이터를 저장하는 테이블에 대표 번호
 # DB관리자(성능,백업,튜닝,권한,계정관리) - DBA
 # OCP 자격증
@@ -67,10 +71,3 @@ if st.button("가입하기"):
     """)
 
     db저장소.commit()
-
-
-# AI챗봇 회원별 대화 기록 primary key
-# 머신러닝 학습 데이터
-#   같은 회원이 들어가면 쏠림 현상
-#   unique 처음부터 막기
-# 업무 자동화
